@@ -1,4 +1,4 @@
-import scala.collection.mutable.{ArrayBuffer, ListBuffer}
+import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
 object Football extends App {
@@ -7,18 +7,10 @@ object Football extends App {
     "Manchester City","Manchester United","Newcastle United","Southampton","Stoke City",
     "Swansea City")
 
-//  val home = Random.shuffle(teams.toBuffer).take(10)
-//  val away = teams.filterNot(x => home.contains(x)).toBuffer
-//
-//  val games = home.zip(away)
-//
-//  games.foreach {
-//    case (x,y) => println(x + " " + Random.nextInt(5) + " " + y + " " + Random.nextInt(5))
-//  }
   def round(teams: Array[String]) : ArrayBuffer[String] = {
   val nextRound: ArrayBuffer[String] = new ArrayBuffer
   val awayScores: ArrayBuffer[Int] = new ArrayBuffer
-  val n = teams.length
+  val roundNo = teams.length
   val home = Random.shuffle(teams.toBuffer).take(teams.length/2)
   val away = teams.filterNot(x => home.contains(x)).toBuffer
 
@@ -33,19 +25,54 @@ object Football extends App {
 
   val games = home.zip(homeScores) zip away.zip(awayScores)
 
-  println(s"\nLast $n")
+  println(Console.BOLD + s"\nLast $roundNo" + Console.RESET)
 
   games.foreach {
     case ((w, x), (y, z)) => println(w + " " + x + " " + y + " " + z)
   }
 
   games.foreach {
-    case ((homeT, x), (awayT, z)) if x > z => nextRound.append(homeT)
-    case ((homeT, x), (awayT, z)) if x < z => nextRound.append(awayT)
+    case ((homeT, hScore), (awayT, aScore)) if hScore > aScore => nextRound.append(homeT)
+    case ((homeT, hScore), (awayT, aScore)) if hScore < aScore => nextRound.append(awayT)
   }
 
-  if (nextRound.length >= 2) {round(nextRound.toArray)}
-  nextRound
+  if (nextRound.length >= 2){
+  round(nextRound.toArray)}
+  else {
+    println(Console.BOLD + "\nWinner\n" + Console.RESET +  nextRound(0))
+    print("\n" +
+      "        ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶\n" +
+      "        ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶\n" +
+      "   ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶\n" +
+      " ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶\n" +
+      "¶¶¶¶      ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶       ¶¶¶¶\n" +
+      "¶¶¶       ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶        ¶¶¶\n" +
+      "¶¶        ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶        ¶¶¶\n" +
+      "¶¶¶     ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶      ¶¶¶\n" +
+      "¶¶¶    ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶    ¶¶¶¶\n" +
+      " ¶¶¶   ¶¶¶ ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶ ¶¶¶    ¶¶¶\n" +
+      " ¶¶¶¶   ¶¶¶ ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶ ¶¶¶¶  ¶¶¶¶\n" +
+      "   ¶¶¶¶  ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶ ¶¶¶¶¶\n" +
+      "    ¶¶¶¶¶¶¶¶ ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶ ¶¶¶¶¶¶¶¶¶\n" +
+      "      ¶¶¶¶¶¶  ¶¶¶¶¶¶¶¶¶¶¶¶¶¶   ¶¶¶¶¶¶\n" +
+      "               ¶¶¶¶¶¶¶¶¶¶¶¶\n" +
+      "                 ¶¶¶¶¶¶¶¶\n" +
+      "                   ¶¶¶¶\n" +
+      "                   ¶¶¶¶\n" +
+      "                   ¶¶¶¶\n" +
+      "                   ¶¶¶¶\n" +
+      "               ¶¶¶¶¶¶¶¶¶¶¶¶\n" +
+      "            ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶\n" +
+      "            ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶\n" +
+      "            ¶¶¶            ¶¶¶\n" +
+      "            ¶¶¶            ¶¶¶\n" +
+      "            ¶¶¶            ¶¶¶\n" +
+      "            ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶\n" +
+      "            ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶\n" +
+      "          ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶\n" +
+      "         ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶")}
+
+    nextRound
 }
 round(teams)
 }
