@@ -7,32 +7,41 @@ object Football extends App {
     "Manchester City", "Manchester United", "Newcastle United", "Southampton", "Stoke City",
     "Swansea City")
 
+  val top6 = Array("Arsenal", "Chelsea", "Liverpool", "Manchester City", "Manchester United", "Newcastle United")
+
   def round(teams: Array[String]): ArrayBuffer[String] = {
     val nextRound: ArrayBuffer[String] = new ArrayBuffer
-    val awayScores: ArrayBuffer[Int] = new ArrayBuffer
     val roundNo = teams.length
     val homeTeams = Random.shuffle(teams.toBuffer).take(teams.length / 2)
     val awayTeams = teams.filterNot(x => homeTeams.contains(x)).toBuffer
     val titleOn = Console.BOLD + Console.RED
-    val homeScores = Seq.fill(teams.length / 2)(Random.nextInt(5))
+    val homeScores = Seq.fill(teams.length / 2)(Random.nextInt(6))
 
-    val uniqueScores = Seq.fill(teams.length / 2)(Random.nextInt(5))
+    val awayScores = Seq.fill(teams.length / 2)(Random.nextInt(5))
 
-    homeScores.zip(uniqueScores).foreach {
-      case (x, y) if x == y => awayScores.append(5 - y)
-      case (x, y) if x != y => awayScores.append(y)
+    // zip home scores to the teams and away teams with their scores
+    val games = homeTeams.zip(homeScores) zip awayTeams.zip(awayScores)
+
+    val ranked = games.map {
+      case ((homeT, hScore), (awayT, aScore)) if top6.contains(homeT) => ((homeT, Random.nextInt(7)), (awayT, aScore))
+      case ((homeT, hScore), (awayT, aScore)) if !top6.contains(homeT) => ((homeT, hScore), (awayT, aScore))
+      case ((homeT, hScore), (awayT, aScore)) if top6.contains(awayT) => ((homeT, hScore), (awayT, Random.nextInt(7)))
+      case ((homeT, hScore), (awayT, aScore)) if !top6.contains(awayT) => ((homeT, hScore), (awayT, aScore))
     }
 
-    val games = homeTeams.zip(homeScores) zip awayTeams.zip(awayScores)
+    val avoidDraws = ranked.map {
+      case ((homeT, hScore), (awayT, aScore)) if hScore == aScore => ((homeT, hScore+1), (awayT, aScore))
+      case ((homeT, hScore), (awayT, aScore)) if hScore != aScore => ((homeT, hScore), (awayT, aScore))
+    }
 
     println("\n" + titleOn + s"Last $roundNo" + Console.RESET)
 
-    games.foreach {
+    avoidDraws.foreach {
       case ((homeT, hScore), (awayT, aScore)) => println(homeT + " " + hScore + " " + awayT + " " + aScore)
     }
 
-    games.foreach {
-      case ((homeT, hScore), (awayT, aScore)) if hScore > aScore => nextRound.append(homeT)
+    avoidDraws.foreach {
+      case ((homeT, hScore), (awayT, aScore)) if hScore >= aScore => nextRound.append(homeT)
       case ((homeT, hScore), (awayT, aScore)) if hScore < aScore => nextRound.append(awayT)
     }
 
