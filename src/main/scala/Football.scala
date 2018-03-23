@@ -11,6 +11,7 @@ object Football extends App {
   def round(teams: List[String]): List[String] = {
     val titleOn = Console.BOLD + Console.RED
     val roundNo = teams.length
+    val winner = Random.nextInt(2)
 
     val homeTeams : List[String] = Random.shuffle(teams.toBuffer).take(teams.length / 2).toList
     val awayTeams : List[String] = teams.filterNot(x => homeTeams.contains(x))
@@ -29,7 +30,7 @@ object Football extends App {
     }
 
     val avoidDraws = boostTopSix.map {
-      case ((homeT, hScore), (awayT, aScore)) if hScore == aScore => ((homeT, hScore+1), (awayT, aScore))
+      case ((homeT, hScore), (awayT, aScore)) if hScore == aScore => ((homeT, hScore + 3 - winner), (awayT, aScore + 2 + winner))
       case ((homeT, hScore), (awayT, aScore)) if hScore != aScore => ((homeT, hScore), (awayT, aScore))
     }
 
@@ -81,9 +82,7 @@ object Football extends App {
         "          ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶\n" +
         "         ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶\n" + Console.RESET)
     }
-
     nextRound
   }
-
   round(teams)
 }
