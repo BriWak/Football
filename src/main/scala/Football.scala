@@ -1,25 +1,26 @@
 import scala.util.Random
 
+case class Team(name: String)
+
 object Football extends App {
-  val teams = List("Arsenal", "Bournemouth", "Brighton & Hove Albion", "Burnley", "Chelsea",
-    "Crystal Palace", "Everton", "Huddersfield Town", "Leicester City", "Liverpool",
-    "Manchester City", "Manchester United", "Newcastle United", "Southampton", "Stoke City",
-    "Swansea City")
+  val teams = List(Team("Arsenal"), Team("Bournemouth"), Team("Brighton & Hove Albion"), Team("Burnley"), Team("Chelsea"),
+    Team("Crystal Palace"), Team("Everton"), Team("Huddersfield Town"), Team("Leicester City"), Team("Liverpool"),
+      Team("Manchester City"), Team("Manchester United"), Team("Newcastle United"), Team("Southampton"), Team("Stoke City"),
+        Team("Swansea City"))
 
-  val top6 = List("Arsenal", "Chelsea", "Liverpool", "Manchester City", "Manchester United", "Newcastle United")
+  val top6 = List(Team("Arsenal"), Team("Chelsea"), Team("Liverpool"), Team("Manchester City"), Team("Manchester United"), Team("Newcastle United"))
 
-  def round(teams: List[String]): List[String] = {
+  def round(teams: List[Team]): List[Team] = {
     val titleOn = Console.BOLD + Console.RED
     val roundNo = teams.length
     val winner = Random.nextInt(2)
 
-    val homeTeams : List[String] = Random.shuffle(teams.toBuffer).take(teams.length / 2).toList
-    val awayTeams : List[String] = teams.filterNot(x => homeTeams.contains(x))
+    val homeTeams : List[Team] = Random.shuffle(teams.toBuffer).take(teams.length / 2).toList
+    val awayTeams : List[Team] = teams.filterNot(x => homeTeams.contains(x))
 
     val homeScores : List[Int] = List.fill(teams.length / 2)(Random.nextInt(6))
     val awayScores : List[Int] = List.fill(teams.length / 2)(Random.nextInt(5))
 
-    // zip home teams to their scores and away teams to their scores
     val games = homeTeams.zip(homeScores) zip awayTeams.zip(awayScores)
 
     val boostTopSix = games.map {
@@ -37,7 +38,7 @@ object Football extends App {
     println("\n" + titleOn + s"Last $roundNo" + Console.RESET)
 
     avoidDraws.foreach {
-      case ((homeT, hScore), (awayT, aScore)) => println(homeT + " " + hScore + " " + awayT + " " + aScore)
+      case ((homeT, hScore), (awayT, aScore)) => println(homeT.name + " " + hScore + " " + awayT.name + " " + aScore)
     }
 
     val nextRound = avoidDraws.map {
@@ -49,7 +50,7 @@ object Football extends App {
       round(nextRound)
     }
     else {
-      println("\n" + titleOn + "Winner" + Console.RESET + "\n" + nextRound(0))
+      println("\n" + titleOn + "Winner" + Console.RESET + "\n" + nextRound.head.name)
       print("\n" + Console.YELLOW +
         "        ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶\n" +
         "        ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶\n" +
